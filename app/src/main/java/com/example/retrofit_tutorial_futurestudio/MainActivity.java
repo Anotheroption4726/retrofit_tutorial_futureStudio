@@ -21,8 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
         textViewResult = findViewById(R.id.resultTextView);
 
-        Retrofit retrofit = new Retrofit.Builder()
+        /*Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://jsonplaceholder.typicode.com/")
-                .addConverterFactory()
+                .addConverterFactory()*/
     }
 }
