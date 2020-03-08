@@ -15,6 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     private TextView textViewResult;
+    JsonPlaceHolderApi jsonPlaceHolderApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +29,13 @@ public class MainActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
+        jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
+        getAllPosts();
+        getPostFromUserId_1();
+    }
+
+    private void getAllPosts (){
         Call<List<Post>> call = jsonPlaceHolderApi.getPosts();
 
         call.enqueue(new Callback<List<Post>>() {
@@ -56,6 +62,36 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
+                textViewResult.setText(t.getMessage());
+            }
+        });
+    }
+
+    private void getPostFromUserId_1() {
+        Call<Post> call = jsonPlaceHolderApi.getPostsFromUserId_1();
+
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+
+                if(!response.isSuccessful()){
+                    textViewResult.setText("Code: " + response.code());
+                    return;
+                }
+
+                Post answerPost = response.body();
+
+                String content = "";
+                content += "ID: " + answerPost.getId() + "\n";
+                content += "User ID: " + answerPost.getUserId() + "\n";
+                content += "Title: " + answerPost.getTitle() + "\n";
+                content += "Text: " + answerPost.getText() + "\n\n";
+
+                textViewResult.append(content);
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
                 textViewResult.setText(t.getMessage());
             }
         });

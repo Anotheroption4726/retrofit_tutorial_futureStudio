@@ -9,4 +9,7 @@ public interface JsonPlaceHolderApi {
 
     @GET("posts")
     Call<List<Post>> getPosts();
+
+    @GET("posts/1")
+    Call<Post> getPostsFromUserId_1();
 }
