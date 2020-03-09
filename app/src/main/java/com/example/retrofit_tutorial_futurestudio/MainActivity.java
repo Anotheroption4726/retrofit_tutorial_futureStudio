@@ -32,8 +32,9 @@ public class MainActivity extends AppCompatActivity {
         jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
         //getAllPosts();
+        getPostsQueryFromUserId ();
         //getPostFromUserId_1();
-        getComments();
+        //getComments();
     }
 
     private void getAllPosts (){
@@ -68,6 +69,44 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
+
+    private void getPostsQueryFromUserId (){
+        Call<List<Post>> call = jsonPlaceHolderApi.getPostsQueryFromUserId(new Integer[]{2, 3, 6}, "postId", null);
+
+        call.enqueue(new Callback<List<Post>>() {
+            @Override
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+
+                if(!response.isSuccessful()){
+                    textViewResult.setText("Code: " + response.code());
+                    return;
+                }
+
+                List<Post> posts = response.body();
+
+                for (Post post: posts){
+                    String content = "";
+                    content += "ID: " + post.getId() + "\n";
+                    content += "User ID: " + post.getUserId() + "\n";
+                    content += "Title: " + post.getTitle() + "\n";
+                    content += "Text: " + post.getText() + "\n\n";
+
+                    textViewResult.append(content);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Post>> call, Throwable t) {
+                textViewResult.setText(t.getMessage());
+            }
+        });
+    }
+
+
+
+
     private void getPostFromUserId_1() {
         Call<Post> call = jsonPlaceHolderApi.getPostsFromUserId_1();
 
@@ -100,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void getComments() {
-        Call<List<Comment>> call = jsonPlaceHolderApi.getComments();
+        Call<List<Comment>> call = jsonPlaceHolderApi.getComments(2);
 
         call.enqueue(new Callback<List<Comment>>() {
             @Override
